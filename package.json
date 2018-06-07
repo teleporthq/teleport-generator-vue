@@ -6,6 +6,7 @@
   "scripts": {
     "watch-build": "./node_modules/.bin/tsc -w",
     "build": "npm run clean && ./node_modules/.bin/tsc",
+    "link-dev": "npm link ../teleport-lib-js",
     "clean": "rm -rf dist"
   },
   "repository": {
@@ -21,6 +22,7 @@
   "devDependencies": {
     "source-map-support": "^0.5.4",
     "ts-node": "^5.0.1",
+    "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   },
   "dependencies": {
@@ -28,7 +30,7 @@
     "deepmerge": "^2.1.0",
     "fs-jetpack": "^1.3.0",
     "lodash": "^4.17.5",
-    "tslint": "^5.9.1",
-    "vue-formatter": "0.0.7"
+    "vue-formatter": "0.0.7",
+    "teleport-lib-js": "git+ssh://git@gitlab.com/teleporthq/teleport-lib-js.git"
   }
 }

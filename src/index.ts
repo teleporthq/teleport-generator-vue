@@ -1,4 +1,4 @@
-import { Generator } from '../teleport-lib-js'
+import { Generator } from 'teleport-lib-js'
 import VueComponentGenerator from './generators/component'
 import VueProjectGenerator from './generators/project'
 

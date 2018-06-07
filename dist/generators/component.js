@@ -29,7 +29,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var _ = require("lodash");
 var formatter = require("vue-formatter");
-var teleport_lib_js_1 = require("../../teleport-lib-js");
+var teleport_lib_js_1 = require("teleport-lib-js");
 var template_1 = require("../renderers/template");
 var component_1 = require("../renderers/component");
 function findNextIndexedKeyInObject(object, key) {

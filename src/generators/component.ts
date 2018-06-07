@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as formatter from 'vue-formatter'
 
-import teleport, { ComponentGenerator, Generator, RenderResult } from '../../teleport-lib-js'
+import teleport, { ComponentGenerator, Generator, RenderResult } from 'teleport-lib-js'
 import TeleportGeneratorVue from '../index'
 import TEMPLATErenderer from '../renderers/template'
 import COMPONENTrenderer from '../renderers/component'
