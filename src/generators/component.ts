@@ -1,7 +1,8 @@
 import * as _ from 'lodash'
 import * as formatter from 'vue-formatter'
 
-import teleport, { ComponentGenerator, Generator, RenderResult } from 'teleport-lib-js'
+import teleport, { ComponentGenerator, Generator, FileSet } from 'teleport-lib-js'
+
 import TeleportGeneratorVue from '../index'
 import TEMPLATErenderer from '../renderers/template'
 import COMPONENTrenderer from '../renderers/component'
@@ -148,7 +149,7 @@ export default class VueComponentGenerator extends ComponentGenerator {
   }
 
   // tslint:disable-next-line:no-shadowed-variable
-  public generate(component: any, options: any = {}): string {
+  public generate(component: any, options: any = {}): FileSet {
     const { name } = component
     let { content } = component
 
@@ -166,7 +167,7 @@ export default class VueComponentGenerator extends ComponentGenerator {
     const props = ( component.editableProps ? Object.keys(component.editableProps) : null )
 
     // tslint:disable-next-line:max-line-length
-    const result = new RenderResult()
+    const result = new FileSet()
     result.addFile(
       `${_.upperFirst(component.name)}.vue`,
 
