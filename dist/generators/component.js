@@ -68,6 +68,7 @@ var VueComponentGenerator = /** @class */ (function (_super) {
         return { styles: styles, content: content };
     };
     VueComponentGenerator.prototype.computeDependencies = function (content) {
+        var _a, _b;
         var _this = this;
         var dependencies = {};
         var source = content.source, type = content.type, children = content.children, otherProps = __rest(content, ["source", "type", "children"]);
@@ -112,7 +113,6 @@ var VueComponentGenerator = /** @class */ (function (_super) {
             }
         }
         return dependencies;
-        var _a, _b;
     };
     VueComponentGenerator.prototype.renderComponentTemplate = function (content) {
         var _this = this;
@@ -168,7 +168,7 @@ var VueComponentGenerator = /** @class */ (function (_super) {
         var template = this.renderComponentTemplate(content);
         var props = (component.editableProps ? Object.keys(component.editableProps) : null);
         // tslint:disable-next-line:max-line-length
-        var result = new teleport_lib_js_1.RenderResult();
+        var result = new teleport_lib_js_1.FileSet();
         result.addFile(_.upperFirst(component.name) + ".vue", formatter(component_1.default(name, template, dependencies, css, props)));
         return result;
     };

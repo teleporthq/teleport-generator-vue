@@ -24,7 +24,7 @@ var ReactProjectGenerator = /** @class */ (function (_super) {
         var _this = this;
         if (options === void 0) { options = {}; }
         var name = project.name, components = project.components, pages = project.pages;
-        var result = new teleport_lib_js_1.RenderResult();
+        var result = new teleport_lib_js_1.FileSet();
         result.addFile('package.json', package_1.default(project));
         if (components) {
             Object.keys(components).map(function (componentName) {
