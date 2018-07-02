@@ -1,4 +1,4 @@
-import { ProjectGenerator, Generator, FileSet } from 'teleport-lib-js'
+import { ProjectGenerator, Generator, FileSet } from '@teleporthq/teleport-lib-js'
 
 import TeleportGeneratorReact from '../index'
 import packageRenderer from '../renderers/package'
