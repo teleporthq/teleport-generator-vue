@@ -1,7 +1,6 @@
-import * as _ from 'lodash'
-
+import upperFirst = require('lodash/upperFirst')
+import union = require('lodash/union')
 import { ComponentGenerator, Generator, FileSet } from '@teleporthq/teleport-lib-js'
-
 import TeleportGeneratorVue from '../index'
 import TEMPLATErenderer from '../renderers/template'
 import COMPONENTrenderer from '../renderers/component'
@@ -87,7 +86,7 @@ export default class VueComponentGenerator extends ComponentGenerator {
           Object.keys(childrenDependency).forEach((childrenDependencyLibrary) => {
             if (!dependencies[childrenDependencyLibrary]) dependencies[childrenDependencyLibrary] = []
 
-            dependencies[childrenDependencyLibrary] = _.union(dependencies[childrenDependencyLibrary], childrenDependency[childrenDependencyLibrary])
+            dependencies[childrenDependencyLibrary] = union(dependencies[childrenDependencyLibrary], childrenDependency[childrenDependencyLibrary])
           })
         })
       }
@@ -155,7 +154,7 @@ export default class VueComponentGenerator extends ComponentGenerator {
     const props = component.editableProps ? Object.keys(component.editableProps) : null
 
     const result = new FileSet()
-    result.addFile(`${_.upperFirst(component.name)}.vue`, COMPONENTrenderer(name, template, dependencies, styles, props))
+    result.addFile(`${upperFirst(component.name)}.vue`, COMPONENTrenderer(name, template, dependencies, styles, props))
 
     return result
   }
