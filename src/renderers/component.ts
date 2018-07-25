@@ -6,7 +6,7 @@ const renderDependency = (libraryName, types) => {
 
 export default function component(name: string, template: string, dependencies: any = {}, styles, props): any {
   // tslint:disable-next-line:max-line-length
-  const dependenciesArray = Object.keys(dependencies).map(libraryName => renderDependency(libraryName, dependencies[libraryName] ))
+  const dependenciesArray = Object.keys(dependencies).map((libraryName) => renderDependency(libraryName, dependencies[libraryName]))
 
   let propsString = ''
   if (props && props.length > 0) {
@@ -14,9 +14,11 @@ export default function component(name: string, template: string, dependencies: 
   }
 
   let componentsString = ''
-  if (dependencies && Object.keys(dependencies).length > 0 ) {
+  if (dependencies && Object.keys(dependencies).length > 0) {
     componentsString = `components: {
-      ${ Object.keys(dependencies).map(librabryName => dependencies[librabryName]).join(', ') }      
+      ${Object.keys(dependencies)
+        .map((librabryName) => dependencies[librabryName])
+        .join(', ')}      
     }`
   }
 
