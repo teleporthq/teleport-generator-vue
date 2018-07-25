@@ -13,9 +13,8 @@ export default class ReactProjectGenerator extends ProjectGenerator {
     this.componentGenerator = componentGenerator
   }
 
-  // tslint:disable-next-line:no-shadowed-variable
   public generate(project: any, options: any = {}): FileSet {
-    const { name, components, pages } = project
+    const { components, pages } = project
 
     const result = new FileSet()
     result.addFile('package.json', packageRenderer(project))

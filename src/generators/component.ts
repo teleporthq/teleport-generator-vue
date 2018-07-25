@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 
-import teleport, { ComponentGenerator, Generator, FileSet } from '@teleporthq/teleport-lib-js'
+import { ComponentGenerator, Generator, FileSet } from '@teleporthq/teleport-lib-js'
 
 import TeleportGeneratorVue from '../index'
 import TEMPLATErenderer from '../renderers/template'
@@ -51,7 +51,7 @@ export default class VueComponentGenerator extends ComponentGenerator {
   public computeDependencies(content: any): any {
     const dependencies = {}
 
-    const { source, type, children, ...otherProps } = content
+    const { source, type, children } = content
 
     if (source && type) {
       if (source === 'components') {
