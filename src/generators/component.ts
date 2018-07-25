@@ -51,7 +51,7 @@ export default class VueComponentGenerator extends ComponentGenerator {
   public computeDependencies(content: any): any {
     const dependencies = {}
 
-    let { source, type, children, ...otherProps } = content
+    const { source, type, children, ...otherProps } = content
 
     if (source && type) {
       if (source === 'components') {
@@ -76,8 +76,6 @@ export default class VueComponentGenerator extends ComponentGenerator {
           // if the type is not yet in the deps for the current library, add it
           if (dependencies[mapping.library].indexOf(mapping.type) < 0) dependencies[mapping.library].push(mapping.type)
         }
-      } else {
-        console.error(`could not map '${type}' from '${source}' for target '${this.generator.targetName}'`)
       }
     }
 
@@ -122,8 +120,7 @@ export default class VueComponentGenerator extends ComponentGenerator {
 
     let childrenTags: any = []
     if (children && children.length > 0) {
-      if (typeof children === 'string') childrenTags = children
-      else childrenTags = children.map((child) => this.renderComponentTemplate(child))
+      childrenTags = typeof children === 'string' ? children : children.map((child) => this.renderComponentTemplate(child))
     }
 
     if (Array.isArray(childrenTags)) {
@@ -150,18 +147,15 @@ export default class VueComponentGenerator extends ComponentGenerator {
     const dependencies = this.computeDependencies(content)
 
     const stylingResults = this.processStyles(content, {})
-
     const styles = stylingResults.styles
     content = stylingResults.content
-
-    const { css } = teleport.transformers.styles.jstocss(styles)
 
     const template = this.renderComponentTemplate(content)
 
     const props = component.editableProps ? Object.keys(component.editableProps) : null
 
     const result = new FileSet()
-    result.addFile(`${_.upperFirst(component.name)}.vue`, COMPONENTrenderer(name, template, dependencies, css, props))
+    result.addFile(`${_.upperFirst(component.name)}.vue`, COMPONENTrenderer(name, template, dependencies, styles, props))
 
     return result
   }
