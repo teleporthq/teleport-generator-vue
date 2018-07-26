@@ -1,4 +1,4 @@
-import upperFirst = require('lodash/upperFirst')
+import upperFirst from 'lodash/upperFirst'
 
 const renderDependency = (libraryName, types) => {
   return `import ${types.join(', ')} from '${libraryName}'`
