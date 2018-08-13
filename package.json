@@ -39,7 +39,6 @@
     "prettier": "^1.13.6"
   },
   "dependencies": {
-    "@types/node": "^9.6.0",
     "lodash": "^4.17.5",
     "@teleporthq/teleport-lib-js": "^0.0.15"
   }
