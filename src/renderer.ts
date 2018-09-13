@@ -24,7 +24,7 @@ function renderElement(name: string, children?: string, styles?: any, elementSty
     .join(' ')
 
   children = PropsUtils.parseChildrenElementsForProps(children)
-  const childrenTag = children !== '{{children}}' ? children : '<slot></slot>'
+  const childrenTag = children !== '{{children}}' ? children : '<slot></slot>{{children}}'
 
   return !children || !children.length
     ? `<${name} ${stylesString} ${propsString}/>`
