@@ -8,6 +8,11 @@ export default class GeneralUtils {
     interpolateEnd = INTERPOLATE_END,
     replaceWith = ''
   ): string {
-    return replace ? `${interpolateStart} ${content.replace(replace, replaceWith)} ${interpolateEnd}` : `${interpolateStart} ${content}  ${interpolateEnd}`
+    return replace ? `${interpolateStart}${content.replace(replace, replaceWith)}${interpolateEnd}` : `${interpolateStart}${content}${interpolateEnd}`
+  }
+
+  public static containsSpecialCharacters(stringToCheck: string): boolean {
+    const format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
+    return format.test(stringToCheck)
   }
 }

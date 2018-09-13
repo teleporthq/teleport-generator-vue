@@ -4,27 +4,40 @@ import styleTransformers from '@teleporthq/teleport-lib-js/dist/transformers/sty
 import { PropsUtils, StylesUtils } from './utils'
 import upperFirst from 'lodash/upperFirst'
 import flatten from 'lodash/flatten'
+import uniqBy from 'lodash/uniqBy'
 const { jsstocss } = styleTransformers
 
 function renderElement(name: string, children?: string, styles?: any, elementStyles?: any, props?: any): string {
   let stylesString: string = ''
   if (elementStyles) {
     const classStyle = Array.isArray(elementStyles) ? elementStyles.join(' ') : elementStyles
-    const isDynamicStyle = StylesUtils.isDynamicStyle(styles, classStyle)
-    stylesString = isDynamicStyle ? `:style="${classStyle}"` : `class="${classStyle}"`
+    const { dynamicStyle, staticStyle } = StylesUtils.computeStyleType(styles, classStyle)
+    stylesString = generateStyleTag(dynamicStyle, staticStyle, classStyle)
   }
 
   const propsString: string = Object.keys(props)
-    .map((propName) => `${propName}="${PropsUtils.parseChildrenElementsForProps(props[propName], true)}"`)
+    .map((propName) => {
+      const hasDynamicProp = PropsUtils.hasDynamicProp(props[propName])
+      const prePropName = hasDynamicProp ? ':' : ''
+      return `${prePropName}${propName}="${PropsUtils.parseChildrenElementsForProps(props[propName], true, true)}"`
+    })
     .join(' ')
 
   children = PropsUtils.parseChildrenElementsForProps(children)
+  const childrenTag = children !== '{{children}}' ? children : '<slot></slot>'
 
   return !children || !children.length
     ? `<${name} ${stylesString} ${propsString}/>`
     : `<${name} ${stylesString} ${propsString}>
-        ${children}
+        ${childrenTag}
       </${name}>`
+}
+
+function generateStyleTag(isDynamicStyle: boolean, isStaticStyle: boolean, className: string): string {
+  if (isDynamicStyle && isStaticStyle) {
+    return `class="${className}" :style="${className}"`
+  }
+  return isDynamicStyle ? `:style="${className}"` : `class="${className}"`
 }
 
 function generateTemplate(content: any, styles: any, target: Target, options: ComponentGeneratorOptions): any {
@@ -47,19 +60,19 @@ function generateTemplate(content: any, styles: any, target: Target, options: Co
     childrenTags = typeof children === 'string' ? children : children.map((child) => generateTemplate(child, styles, target, options))
   }
 
-  // const { props: componentProps, ...otherProps } = props
-  // const mappedProps = { ...componentProps, ...otherProps }
+  const { props: componentProps, ...otherProps } = props
+  const mappedProps = { ...componentProps, ...otherProps }
 
-  // if (mappedProps.children && Array.isArray(mappedProps.children)) {
-  //   childrenTags = mappedProps.children.map((child) => generateTemplate(child, styles, target, options))
-  //   delete mappedProps.children
-  // }
+  if (mappedProps.children && Array.isArray(mappedProps.children)) {
+    childrenTags = mappedProps.children.map((child) => generateTemplate(child, styles, target, options))
+    delete mappedProps.children
+  }
 
   if (Array.isArray(childrenTags)) {
     childrenTags = childrenTags.join('')
   }
 
-  return renderElement(mappedType, childrenTags, styles, className, props)
+  return renderElement(mappedType, childrenTags, styles, className, mappedProps)
 }
 
 function renderTemplate(name: string, template: string, dependenciesData: any, styles: any, props: string): string {
@@ -122,14 +135,13 @@ export default class VueComponentCodeGenerator extends ComponentCodeGenerator {
   private getDependenciesString(dependencies: any = {}, options?: ComponentGeneratorOptions): string {
     return Object.keys(dependencies)
       .map((libraryName) => this.renderDependency(libraryName, dependencies[libraryName], options))
-      .join('')
+      .join('\n')
   }
 
   private getComponentsString(dependencies: any = {}): string {
     const types = Object.keys(dependencies).map((libraryName) => dependencies[libraryName])
-    const components = flatten(types)
-      .map((type) => (typeof type === 'string' ? type : type.type))
-      .join('')
+    const uniqComponents = uniqBy(flatten(types), 'type')
+    const components = uniqComponents.map((type) => (typeof type === 'string' ? type : type.type)).join(',\n')
 
     return dependencies && Object.keys(dependencies).length ? `components: {${components}}` : ''
   }

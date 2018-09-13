@@ -1,18 +1,20 @@
-import omit from 'lodash/omit'
 import GeneralUtils from './generalUtils'
 import { PROPS_KEY, THIS } from '../constants'
 
 export default class StylesUtils {
   public static detectDynamicStyle(styles: any): any {
-    const dynamicStyles = Object.keys(styles).reduce((obj, style) => {
-      const hasDynamicProp = JSON.stringify(styles[style]).split(PROPS_KEY).length > 1
-      if (hasDynamicProp) {
-        obj[style] = styles[style]
+    const dynamicStyles = {}
+    const staticStyles = {}
+    Object.keys(styles).forEach((style) => {
+      const { dynamicStyle, staticStyle } = extractDynamicPropsFromStyle(styles[style])
+      if (Object.keys(dynamicStyle).length) {
+        dynamicStyles[style] = dynamicStyle
       }
-      return obj
-    }, {})
+      if (Object.keys(staticStyle).length) {
+        staticStyles[style] = staticStyle
+      }
+    })
 
-    const staticStyles = omit(styles, Object.keys(dynamicStyles))
     return { dynamicStyles, staticStyles }
   }
 
@@ -23,10 +25,13 @@ export default class StylesUtils {
 
         const dynamicStyle = Object.keys(styleValue)
           .map((styleKey) => {
-            const hasProp = styleValue[styleKey].indexOf(PROPS_KEY) >= 0
+            const hasProp = styleValue[styleKey] && styleValue[styleKey].length && styleValue[styleKey].indexOf(PROPS_KEY) >= 0
+            const isComposedStyleKey = GeneralUtils.containsSpecialCharacters(styleKey)
+            const keyString = isComposedStyleKey ? `"${styleKey}"` : styleKey
+
             return hasProp
-              ? `${styleKey}: ${GeneralUtils.interpolateString(styleValue[styleKey], PROPS_KEY, '', '', THIS)}`
-              : `${styleKey}: ${JSON.stringify(styleValue[styleKey])}`
+              ? `${keyString}: ${GeneralUtils.interpolateString(styleValue[styleKey], PROPS_KEY, '', '', THIS)}`
+              : `${keyString}: ${JSON.stringify(styleValue[styleKey])}`
           })
           .toString()
 
@@ -35,11 +40,42 @@ export default class StylesUtils {
       .toString()
   }
 
-  public static isDynamicStyle(styles: any, style: any): boolean {
+  public static computeStyleType(styles: any, style: any): any {
+    let dynamicStyle = false
+    let staticStyle = false
     if (!styles[style]) {
-      return false
+      return { dynamicStyle, staticStyle }
     }
-    const stylesString = JSON.stringify(styles[style])
-    return stylesString.indexOf(PROPS_KEY) >= 0
+
+    const styleObj = styles[style]
+    const styleObjKeys = Object.keys(styleObj)
+    for (const styleProp of styleObjKeys) {
+      const styleValue = JSON.stringify(styleObj[styleProp])
+      const isDynamic = styleValue.indexOf(PROPS_KEY) >= 0
+      if (isDynamic) {
+        dynamicStyle = true
+      } else {
+        staticStyle = true
+      }
+      if (dynamicStyle && staticStyle) {
+        break
+      }
+    }
+    return { dynamicStyle, staticStyle }
   }
+}
+
+function extractDynamicPropsFromStyle(style: any): any {
+  const dynamicStyle = {}
+  const staticStyle = {}
+
+  Object.keys(style).forEach((styleKey) => {
+    const stylePropIsDynamic = JSON.stringify(style[styleKey]).indexOf(PROPS_KEY) >= 0
+    if (stylePropIsDynamic) {
+      dynamicStyle[styleKey] = style[styleKey]
+    } else {
+      staticStyle[styleKey] = style[styleKey]
+    }
+  })
+  return { dynamicStyle, staticStyle }
 }

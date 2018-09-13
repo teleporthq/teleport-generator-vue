@@ -24,18 +24,28 @@ export default class PropsUtils {
     return stringifyProps(props)
   }
 
-  public static parseChildrenElementsForProps(content: any, isStyleObject?: boolean): string {
-    return parseChildrenForProps(content, isStyleObject)
+  public static hasDynamicProp(content: any): boolean {
+    if (!content) {
+      return false
+    }
+    const contentString = JSON.stringify(content)
+    return contentString.indexOf(PROPS_KEY) >= 0
+  }
+
+  public static parseChildrenElementsForProps(content: any, escapeString?: boolean, noInterpolation?: boolean): string {
+    return parseChildrenForProps(content, escapeString, noInterpolation)
   }
 }
 
-function parseChildrenForProps(content: any, isStyleObject?: boolean): string {
+function parseChildrenForProps(content: any, escapeString?: boolean, noInterpolation?: boolean): string {
   if (!content) {
     return ''
   }
+  const interpolationStart = noInterpolation ? '' : undefined
+  const interpolationEnd = noInterpolation ? '' : undefined
 
   if (typeof content === 'string') {
-    return content.indexOf(PROPS_KEY) === 0 ? GeneralUtils.interpolateString(content, PROPS_KEY) : content
+    return content.indexOf(PROPS_KEY) === 0 ? GeneralUtils.interpolateString(content, PROPS_KEY, interpolationStart, interpolationEnd) : content
   }
 
   Object.keys(content).forEach((contentKey) => {
@@ -44,12 +54,12 @@ function parseChildrenForProps(content: any, isStyleObject?: boolean): string {
       return parseChildrenForProps(value)
     }
     if (value.indexOf(PROPS_KEY) === 0) {
-      content[contentKey] = GeneralUtils.interpolateString(value, PROPS_KEY)
+      content[contentKey] = GeneralUtils.interpolateString(value, PROPS_KEY, interpolationStart, interpolationEnd)
     }
   })
 
   content = JSON.stringify(content)
-  return isStyleObject ? content.replace(/"/g, '\\"') : GeneralUtils.interpolateString(content)
+  return escapeString ? content.replace(/"/g, '\\"') : GeneralUtils.interpolateString(content)
 }
 
 function findPossiblePropType(prop: string): string {
