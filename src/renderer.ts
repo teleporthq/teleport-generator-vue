@@ -57,9 +57,7 @@ function generateTemplate(content: any, styles: any, target: Target, options: Co
 
   let childrenTags: any = []
   if (children && children.length) {
-    childrenTags = typeof children === 'string'
-      ? children
-      : children.map((child) => generateTemplate(child, styles, target, options))
+    childrenTags = typeof children === 'string' ? children : children.map((child) => generateTemplate(child, styles, target, options))
   }
 
   const { props: componentProps, ...otherProps } = props
@@ -84,9 +82,7 @@ function renderTemplate(name: string, template: string, dependenciesData: any, s
 
   const styleContent = jsstocss.stylesheet(staticStyles).css
   const stylesString = styleContent && styleContent.length ? `<style> ${styleContent} </style>` : ''
-  const dataString = dynamicStylesString && dynamicStylesString.length
-    ? `data () { return { ${dynamicStylesString} } },`
-    : ''
+  const dataString = dynamicStylesString && dynamicStylesString.length ? `data () { return { ${dynamicStylesString} } },` : ''
 
   return `
     <template>
@@ -131,8 +127,8 @@ export default class VueComponentCodeGenerator extends ComponentCodeGenerator {
 
   private getDependenciesData(dependencies: any): object {
     return {
-      dependenciesString: this.getDependenciesString(dependencies),
       componentsString: this.getComponentsString(dependencies),
+      dependenciesString: this.getDependenciesString(dependencies),
     }
   }
 
