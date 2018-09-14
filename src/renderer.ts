@@ -3,7 +3,6 @@ import { Content, ComponentEditableProp, ComponentGeneratorOptions } from '@tele
 import styleTransformers from '@teleporthq/teleport-lib-js/dist/transformers/styles'
 import { PropsUtils, StylesUtils } from './utils'
 import upperFirst from 'lodash/upperFirst'
-import flatten from 'lodash/flatten'
 import uniqBy from 'lodash/uniqBy'
 const { jsstocss } = styleTransformers
 
@@ -145,7 +144,9 @@ export default class VueComponentCodeGenerator extends ComponentCodeGenerator {
 
   private getComponentsString(dependencies: any = {}): string {
     const types = Object.keys(dependencies).map((libraryName) => dependencies[libraryName])
-    const uniqComponents = uniqBy(flatten(types), 'type')
+    const flattenedTypes = types.reduce((acc, type) => acc.concat(type), [])
+
+    const uniqComponents = uniqBy(flattenedTypes, 'type')
     const components = uniqComponents.map((type) => (typeof type === 'string' ? type : type.type)).join(',\n')
 
     return dependencies && Object.keys(dependencies).length ? `components: {${components}}` : ''
