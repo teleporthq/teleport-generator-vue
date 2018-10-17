@@ -1,0 +1,87 @@
+{
+  "name": "TestComponent",
+  "content": {
+    "name": "TestComponent",
+    "type": "View",
+    "source": "teleport-elements-core",
+    "style": {
+      "display": "flex"
+    },
+    "children": [{
+        "source": "teleport-elements-core",
+        "type": "Image",
+        "name": "author",
+        "style": {
+          "height": "60px",
+          "width": "60px",
+          "borderRadius": "50%",
+          "border": "5px solid #fff"
+        },
+        "props": {
+          "src": "$props.src",
+          "alt": "$props.name",
+          "children": [{
+            "type" : "TestComponent1",
+            "source" : "components"
+          }]
+        }
+      },
+      {
+        "type" : "TestComponent1",
+        "source" : "components"
+      },
+      {
+        "type" : "Text", 
+        "source" : "teleport-elements-core",
+        "name" : "Text",
+        "props": {
+          "height": "100%"
+        },
+        "style" : {
+            "width" : "100%", 
+            "height" : "$props.height", 
+            "flexDirection" : "row", 
+            "backgroundColor" : "pink"
+        }
+      },
+      {
+        "source": "teleport-elements-core",
+        "type": "View",
+        "name": "Author",
+        "style": {
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "marginLeft": "15px",
+          "lineHeight": "1.2"
+        },
+        "children": [{
+            "source": "teleport-elements-core",
+            "type": "Text",
+            "name": "Name",
+            "children": "$props.name"
+          },
+          {
+            "source": "teleport-elements-core",
+            "type": "Link",
+            "name": "Role",
+            "children": [{
+              "name": "link",
+              "source": "teleport-elements-core",
+              "type": "A",
+              "children": "$props.twitterHandle",
+              "style": {
+                "&:hover": {
+                  "textDecoration": "underline"
+                }
+              }
+            }],
+            "props": {
+              "href": "$props.twitterLink"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "contentWithoutDynamic": {
+    "name": "TestComponent",
+    "type": "View",
+    "source": "teleport-elements-core",
+    "style": {
+      "display": "flex"
+    },
+    "children": [{
+      "source": "teleport-elements-core",
+      "type": "Image",
+      "props": {
+        "children": [{
+          "type": "TestComponent1",
+          "source": "components"
+        }]
+      }
+    }]
+  },
+  "contentWithDynamic": {
+    "name": "TestComponent",
+    "type": "View",
+    "source": "teleport-elements-core",
+    "style": {
+      "display": "flex"
+    },
+    "children": [{
+      "source": "teleport-elements-core",
+      "type": "Image",
+      "name": "author",
+      "props": {
+        "src": "$props.src",
+        "alt": "$props.name",
+        "children": [{
+          "type": "TestComponent1",
+          "source": "components",
+          "style": {
+            "height": "$props.height"
+          }
+        }]
+      }
+    }]
+  },
+  "simpleContent": {
+    "name": "View",
+    "source": "teleport-elements-core",
+    "style": {
+      "display": "$props.display"
+    }
+  }
+}

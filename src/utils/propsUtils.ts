@@ -7,9 +7,6 @@ export default class PropsUtils {
   public static findPropsFromContent(content: Content, editableProps: ComponentEditableProp[], styles: any): string {
     const contentString = `${JSON.stringify(content)} ${JSON.stringify(styles)}`
     const children = contentString.split(PROPS_KEY)
-    if (!children.length) {
-      return ''
-    }
     children.shift()
 
     const editablePropsKeys = Object.keys(editableProps)
@@ -18,7 +15,7 @@ export default class PropsUtils {
     children.forEach((child) => {
       const prop = child.split('"')[0]
       const isEditableProp = editablePropsKeys.indexOf(prop) >= 0
-      const type = isEditableProp ? upperFirst(editableProps[prop].type) : findPossiblePropType(prop)
+      const type = isEditableProp ? upperFirst(editableProps[prop].type) : 'String'
       props[prop] = type
     })
     return stringifyProps(props)
@@ -60,16 +57,6 @@ function parseChildrenForProps(content: any, escapeString?: boolean, noInterpola
 
   content = JSON.stringify(content)
   return escapeString ? content.replace(/"/g, '\\"') : GeneralUtils.interpolateString(content)
-}
-
-function findPossiblePropType(prop: string): string {
-  if (prop.indexOf('}') >= 0) {
-    return 'Object'
-  }
-  if (prop.indexOf(']') >= 0) {
-    return 'Array'
-  }
-  return 'String'
 }
 
 function stringifyProps(props: any): string {

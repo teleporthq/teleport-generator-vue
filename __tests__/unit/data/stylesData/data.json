@@ -1,0 +1,40 @@
+{
+  "withoutDynamic": {
+    "TestComponent": {
+      "display": "flex"
+    },
+    "test": {
+      "height": "60px",
+      "width": "60px",
+      "borderRadius": "50%",
+      "border": "5px solid #fff"
+    }
+  },
+  "withDynamic": {
+    "author": {
+      "height": "60px",
+      "width": "60px",
+      "borderRadius": "50%",
+      "border": "5px solid #fff"
+    },
+    "test": {
+      "width": "100%",
+      "height": "$props.height",
+      "flexDirection": "$props.flexDirection",
+      "backgroundColor": "pink"
+    },
+    "test1": {
+      "height": "$props.height",
+      "width": "60px"
+    }
+  },
+  "dynamicOnly": {
+    "test": {
+      "height": "$props.height"
+    },
+    "test1": {
+      "height": "$props.height",
+      "flexDirection": "$props.flexDirection"
+    }
+  }
+}
